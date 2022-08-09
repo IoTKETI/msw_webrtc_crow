@@ -1,21 +1,21 @@
 {
-  "name": "msw_webrtc",
+  "name": "msw_webrtc_crow",
   "version": "1.0.0",
   "description": "",
-  "main": "msw_webrtc.js",
+  "main": "msw_webrtc_crow.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/IoTKETI/msw_webrtc.git"
+    "url": "git+https://github.com/IoTKETI/msw_webrtc_crow.git"
   },
   "author": "Wonseok Jung",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/IoTKETI/msw_webrtc/issues"
+    "url": "https://github.com/IoTKETI/msw_webrtc_crow/issues"
   },
-  "homepage": "https://github.com/IoTKETI/msw_webrtc#readme",
+  "homepage": "https://github.com/IoTKETI/msw_webrtc_crow#readme",
   "dependencies": {
     "mqtt": "^4.3.5",
     "nanoid": "^3.2.0",
