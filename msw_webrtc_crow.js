@@ -92,13 +92,7 @@ function runLib(obj_lib) {
 
         let run_lib = null;
 
-        if (os.release().includes('v7l')) {
-            console.log('Running LIB on CROW');
-            run_lib = spawn(scripts_arr[0], [scripts_arr[1], drone_info.drone]);
-        } else {
-            console.log('Running LIB on other OS');
-            run_lib = spawn(scripts_arr[0], [scripts_arr[1], drone_info.drone]);
-        }
+        run_lib = spawn(scripts_arr[0], [scripts_arr[1], drone_info.drone]);
 
         run_lib.stdout.on('data', function (data) {
             console.log('stdout: ' + data);
