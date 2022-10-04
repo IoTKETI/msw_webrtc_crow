@@ -22,7 +22,7 @@ npm install
 ```
 "mission" : {
     "containor" : [],
-    "subcontainor" : ["Control"]
+    "subcontainor" : ["Control"],
     "git" : "https://github.com/IoTKETI/msw_webrtc_crow.git"
 }
 ```
