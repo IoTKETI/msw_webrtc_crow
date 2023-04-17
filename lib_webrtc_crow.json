@@ -3,7 +3,9 @@
     "target": "armv6",
     "description": "[name] [WebRTCpath]",
     "scripts": "./lib_webrtc_crow gcs.iotocean.org:7598",
-    "data": [],
+    "data": [
+        "room_name"
+    ],
     "control": [
         "Control"
     ]

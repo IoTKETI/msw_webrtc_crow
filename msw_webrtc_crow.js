@@ -44,9 +44,11 @@ try {
     add_lib = {
         name: 'lib_webrtc_crow',
         target: 'armv6',
-        description: '[name] [WebRTCpath]',
-        scripts: './lib_webrtc_crow gcs.iotocean.org:7598',
-        data: [],
+        description: '[name] [WebRTCpath] [Drone Name] [GCS Name]',
+        scripts: './lib_webrtc_crow gcs.iotocean.org:7598 drone1 KETI_GCS',
+        data: [
+            "room_name"
+        ],
         control: ['Control']
     };
     config.lib.push(add_lib);
