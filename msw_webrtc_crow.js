@@ -92,7 +92,7 @@ function runLib(obj_lib) {
 
         let run_lib = null;
 
-        run_lib = spawn(scripts_arr[0], [scripts_arr[1], drone_info.drone]);
+        run_lib = spawn(scripts_arr[0], [scripts_arr[1], drone_info.drone, drone_info.gcs]);
 
         run_lib.stdout.on('data', function (data) {
             console.log('stdout: ' + data);
