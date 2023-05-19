@@ -239,8 +239,21 @@ function on_receive_from_muv(topic, str_message) {
     parseControlMission(topic, str_message);
 }
 
+let sequence = 0;
+
 function on_receive_from_lib(topic, str_message) {
     // console.log('[' + topic + '] ' + str_message + '\n');
+
+    if (getType(str_message) === 'string') {
+        str_message = (sequence.toString(16).padStart(2, '0')) + str_message;
+    } else {
+        str_message = JSON.parse(str_message);
+        str_message.sequence = sequence;
+        str_message = JSON.stringify(str_message);
+    }
+
+    sequence++;
+    sequence %= 255;
 
     parseDataMission(topic, str_message);
 }
@@ -269,7 +282,12 @@ function parseDataMission(topic, str_message) {
         // }
         // str_message = JSON.stringify(obj_lib_data);
 
+
         let topic_arr = topic.split('/');
+        let local_data_topic = '/TELE/' + topic_arr[3].replace('lib_', 'msw_') + '/' + topic_arr[4];
+        if (local_msw_mqtt_client !== null) {
+            local_msw_mqtt_client.publish(local_data_topic, str_message);
+        }
         let data_topic = '/Mobius/' + config.gcs + '/Mission_Data/' + config.drone + '/' + config.name + '/' + topic_arr[topic_arr.length - 1];
         msw_mqtt_client.publish(data_topic, str_message);
         sh_man.crtci(data_topic + '?rcn=0', 0, str_message, null, function (rsc, res_body, parent, socket) {
