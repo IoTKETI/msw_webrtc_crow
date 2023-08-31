@@ -2,7 +2,7 @@
  * Created by Wonseok Jung in KETI on 2021-06-28.
  */
 
-// for TAS of mission
+    // for TAS of mission
 const mqtt = require('mqtt');
 const fs = require('fs');
 const {exec, spawn} = require('child_process');
@@ -27,7 +27,8 @@ try {
     config.gcs = drone_info.gcs;
     config.drone = drone_info.drone;
     config.lib = [];
-} catch (e) {
+}
+catch (e) {
     // config.sortie_name = '';
     config.directory_name = '';
     config.gcs = 'KETI_MUV';
@@ -40,7 +41,8 @@ let add_lib = {};
 try {
     add_lib = JSON.parse(fs.readFileSync('./lib_webrtc_crow.json', 'utf8'));
     config.lib.push(add_lib);
-} catch (e) {
+}
+catch (e) {
     add_lib = {
         name: 'lib_webrtc_crow',
         target: 'armv6',
@@ -107,7 +109,8 @@ function runLib(obj_lib) {
             if (!code) {
                 console.log('code is null');
                 run_lib.kill();
-            } else {
+            }
+            else {
                 // setTimeout(runLib, 3000, obj_lib);
             }
         });
@@ -115,7 +118,8 @@ function runLib(obj_lib) {
         run_lib.on('error', function (code) {
             console.log('error: ' + code);
         });
-    } catch (e) {
+    }
+    catch (e) {
         console.log(e.message);
     }
 }
@@ -148,13 +152,12 @@ function local_msw_mqtt_connect(broker_ip, port) {
         });
 
         local_mqtt_client.on('message', function (topic, message) {
-            for (let idx in lib_data_msw_topic) {
-                if (lib_data_msw_topic.hasOwnProperty(idx)) {
-                    if (topic === lib_data_msw_topic[idx]) {
-                        setTimeout(on_receive_from_lib, parseInt(Math.random() * 5), topic, message.toString());
-                        break;
-                    }
-                }
+            if (lib_data_msw_topic.includes(topic)) {
+                setTimeout(on_receive_from_lib, parseInt(Math.random() * 5), topic, message.toString());
+
+            }
+            else if (mobius_control_msw_topic.includes(topic)) {
+                setTimeout(on_receive_from_muv, parseInt(Math.random() * 5), topic, message.toString());
             }
         });
 
@@ -177,7 +180,8 @@ function on_receive_from_lib(topic, str_message) {
 
     if (getType(str_message) === 'string') {
         str_message = (sequence.toString(16).padStart(2, '0')) + str_message;
-    } else {
+    }
+    else {
         str_message = JSON.parse(str_message);
         str_message.sequence = sequence;
         str_message = JSON.stringify(str_message);
@@ -195,7 +199,8 @@ function on_process_fc_data(topic, str_message) {
     let topic_arr = topic.split('/');
     try {
         fc[topic_arr[topic_arr.length - 1]] = JSON.parse(str_message.toString());
-    } catch (e) {
+    }
+    catch (e) {
     }
 
     parseFcData(topic, str_message);
@@ -219,7 +224,8 @@ function parseDataMission(topic, str_message) {
         if (local_mqtt_client) {
             local_mqtt_client.publish(data_topic, str_message);
         }
-    } catch (e) {
+    }
+    catch (e) {
         console.log('[parseDataMission] data format of lib is not json');
     }
 }
@@ -231,7 +237,8 @@ function parseControlMission(topic, str_message) {
         let topic_arr = topic.split('/');
         let _topic = '/MUV/control/' + config.lib[0].name + '/' + topic_arr[topic_arr.length - 1];
         local_mqtt_client.publish(_topic, str_message);
-    } catch (e) {
+    }
+    catch (e) {
         console.log('[parseControlMission] data format of lib is not json');
     }
 }
