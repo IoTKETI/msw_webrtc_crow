@@ -168,7 +168,7 @@ function local_msw_mqtt_connect(broker_ip, port) {
 }
 
 function on_receive_from_muv(topic, str_message) {
-    // console.log('[' + topic + '] ' + str_message);
+    console.log('[' + topic + '] ' + str_message);
 
     parseControlMission(topic, str_message);
 }
