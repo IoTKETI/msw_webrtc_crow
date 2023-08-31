@@ -176,7 +176,7 @@ function on_receive_from_muv(topic, str_message) {
 let sequence = 0;
 
 function on_receive_from_lib(topic, str_message) {
-    // console.log('[' + topic + '] ' + str_message + '\n');
+    console.log('[' + topic + '] ' + str_message + '\n');
 
     if (getType(str_message) === 'string') {
         str_message = (sequence.toString(16).padStart(2, '0')) + str_message;
