@@ -88,6 +88,8 @@ function init() {
     }
 }
 
+let runLibState = '';
+
 function runLib(obj_lib) {
     try {
         let scripts_arr = obj_lib.scripts.split(' ');
@@ -102,6 +104,9 @@ function runLib(obj_lib) {
 
         run_lib.stderr.on('data', function (data) {
             console.log('stderr: ' + data);
+            if (data.includes("Failed to execute script 'lib_webrtc_crow' due to unhandled exception!")) {
+                runLibState = 'error';
+            }
         });
 
         run_lib.on('exit', function (code) {
@@ -112,6 +117,21 @@ function runLib(obj_lib) {
             }
             else {
                 // setTimeout(runLib, 3000, obj_lib);
+                if (parseInt(code) === 1) {
+                    if (runLibState === 'error') {
+                        exec('pm2 restart ' + my_msw_name, (error, stdout, stderr) => {
+                            if (error) {
+                                console.log('error: ' + error);
+                            }
+                            if (stdout) {
+                                console.log('stdout: ' + stdout);
+                            }
+                            if (stderr) {
+                                console.log('stderr: ' + stderr);
+                            }
+                        });
+                    }
+                }
             }
         });
 
