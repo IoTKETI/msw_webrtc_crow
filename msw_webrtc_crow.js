@@ -107,7 +107,7 @@ function runLib(obj_lib) {
                 }
 
                 console.log(scripts_arr[0], [drone_info.host + ':7598', drone_info.drone, drone_info.gcs]);
-                run_lib = spawn(scripts_arr[0], [scripts_arr[1], drone_info.drone, drone_info.gcs]);
+                run_lib = spawn(scripts_arr[0], [drone_info.host + ':7598', drone_info.drone, drone_info.gcs]);
 
                 run_lib.stdout.on('data', function (data) {
                     console.log('stdout: ' + data);
