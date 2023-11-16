@@ -106,6 +106,7 @@ function runLib(obj_lib) {
                     scripts_arr[0] = './lib_webrtc_forest';
                 }
 
+                console.log(scripts_arr[0], [scripts_arr[1], drone_info.drone, drone_info.gcs]);
                 run_lib = spawn(scripts_arr[0], [scripts_arr[1], drone_info.drone, drone_info.gcs]);
 
                 run_lib.stdout.on('data', function (data) {
