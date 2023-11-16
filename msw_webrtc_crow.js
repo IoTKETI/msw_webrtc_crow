@@ -96,6 +96,21 @@ function runLib(obj_lib) {
 
         let run_lib = null;
 
+        exec('getconf LONG_BIT', (error, stdout, stderr) => {
+            if (error) {
+                console.log('error: ' + error);
+            }
+            if (stdout) {
+                console.log('stdout: ' + stdout);
+                if (parseInt(stdout) === 64) {
+                    scripts_arr[0] = './lib_webrtc_forest';
+                }
+            }
+            if (stderr) {
+                console.log('stderr: ' + stderr);
+            }
+        });
+
         run_lib = spawn(scripts_arr[0], [scripts_arr[1], drone_info.drone, drone_info.gcs]);
 
         run_lib.stdout.on('data', function (data) {
