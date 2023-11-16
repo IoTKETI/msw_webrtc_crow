@@ -105,53 +105,53 @@ function runLib(obj_lib) {
                 if (parseInt(stdout) === 64) {
                     scripts_arr[0] = './lib_webrtc_forest';
                 }
+
+                run_lib = spawn(scripts_arr[0], [scripts_arr[1], drone_info.drone, drone_info.gcs]);
+
+                run_lib.stdout.on('data', function (data) {
+                    console.log('stdout: ' + data);
+                });
+
+                run_lib.stderr.on('data', function (data) {
+                    console.log('stderr: ' + data);
+                    if (data.includes("Failed to execute script 'lib_webrtc_crow' due to unhandled exception!")) {
+                        runLibState = 'error';
+                    }
+                });
+
+                run_lib.on('exit', function (code) {
+                    console.log('exit: ' + code);
+                    if (!code) {
+                        console.log('code is null');
+                        run_lib.kill();
+                    }
+                    else {
+                        // setTimeout(runLib, 3000, obj_lib);
+                        if (parseInt(code) === 1) {
+                            if (runLibState === 'error') {
+                                exec('pm2 restart ' + my_msw_name, (error, stdout, stderr) => {
+                                    if (error) {
+                                        console.log('error: ' + error);
+                                    }
+                                    if (stdout) {
+                                        console.log('stdout: ' + stdout);
+                                    }
+                                    if (stderr) {
+                                        console.log('stderr: ' + stderr);
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
+
+                run_lib.on('error', function (code) {
+                    console.log('error: ' + code);
+                });
             }
             if (stderr) {
                 console.log('stderr: ' + stderr);
             }
-        });
-
-        run_lib = spawn(scripts_arr[0], [scripts_arr[1], drone_info.drone, drone_info.gcs]);
-
-        run_lib.stdout.on('data', function (data) {
-            console.log('stdout: ' + data);
-        });
-
-        run_lib.stderr.on('data', function (data) {
-            console.log('stderr: ' + data);
-            if (data.includes("Failed to execute script 'lib_webrtc_crow' due to unhandled exception!")) {
-                runLibState = 'error';
-            }
-        });
-
-        run_lib.on('exit', function (code) {
-            console.log('exit: ' + code);
-            if (!code) {
-                console.log('code is null');
-                run_lib.kill();
-            }
-            else {
-                // setTimeout(runLib, 3000, obj_lib);
-                if (parseInt(code) === 1) {
-                    if (runLibState === 'error') {
-                        exec('pm2 restart ' + my_msw_name, (error, stdout, stderr) => {
-                            if (error) {
-                                console.log('error: ' + error);
-                            }
-                            if (stdout) {
-                                console.log('stdout: ' + stdout);
-                            }
-                            if (stderr) {
-                                console.log('stderr: ' + stderr);
-                            }
-                        });
-                    }
-                }
-            }
-        });
-
-        run_lib.on('error', function (code) {
-            console.log('error: ' + code);
         });
     }
     catch (e) {
