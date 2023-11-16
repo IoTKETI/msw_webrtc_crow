@@ -109,18 +109,18 @@ function runLib(obj_lib) {
                 console.log(scripts_arr[0], [drone_info.host + ':7598', drone_info.drone, drone_info.gcs]);
                 run_lib = spawn(scripts_arr[0], [drone_info.host + ':7598', drone_info.drone, drone_info.gcs]);
 
-                run_lib.stdout.on('data', function (data) {
+                run_lib.stdout.on('data', (data) => {
                     console.log('stdout: ' + data);
                 });
 
-                run_lib.stderr.on('data', function (data) {
+                run_lib.stderr.on('data', (data) => {
                     console.log('stderr: ' + data);
                     if (data.includes("Failed to execute script 'lib_webrtc_crow' due to unhandled exception!")) {
                         runLibState = 'error';
                     }
                 });
 
-                run_lib.on('exit', function (code) {
+                run_lib.on('exit', (code) => {
                     console.log('exit: ' + code);
                     if (!code) {
                         console.log('code is null');
@@ -146,7 +146,7 @@ function runLib(obj_lib) {
                     }
                 });
 
-                run_lib.on('error', function (code) {
+                run_lib.on('error', (code) => {
                     console.log('error: ' + code);
                 });
             }
