@@ -106,8 +106,11 @@ function runLib(obj_lib) {
                     scripts_arr[0] = './lib_webrtc_forest';
                 }
 
-                console.log(scripts_arr[0], [drone_info.host + ':7598', drone_info.drone, drone_info.gcs]);
-                run_lib = spawn(scripts_arr[0], [drone_info.host + ':7598', drone_info.drone, drone_info.gcs]);
+                fs.writeFileSync('./lib_webrtc_crow.sh', "#!/bin/bash\n" +
+                    "./lib_webrtc_crow " + drone_info.host + ":7598 " + drone_info.drone + " " + drone_info.gcs);
+
+                console.log(scripts_arr[0] + '.sh');
+                run_lib = spawn(scripts_arr[0] + '.sh');
 
                 run_lib.stdout.on('data', (data) => {
                     console.log('stdout: ' + data);
