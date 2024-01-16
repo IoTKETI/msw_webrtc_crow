@@ -96,6 +96,8 @@ function runLib(obj_lib) {
 
         let run_lib = null;
 
+        process.argv.splice(0,2);
+
         exec('getconf LONG_BIT', (error, stdout, stderr) => {
             if (error) {
                 console.log('error: ' + error);
@@ -106,8 +108,8 @@ function runLib(obj_lib) {
                     scripts_arr[0] = './lib_webrtc_forest';
                 }
 
-                console.log(scripts_arr[0], [drone_info.host + ':7598', drone_info.drone, drone_info.gcs]);
-                run_lib = spawn(scripts_arr[0], [drone_info.host + ':7598', drone_info.drone, drone_info.gcs]);
+                console.log(scripts_arr[0], [drone_info.host + ':7598', drone_info.drone, drone_info.gcs, process.argv.toString().replaceAll(',',' ')]);
+                run_lib = spawn(scripts_arr[0], [drone_info.host + ':7598', drone_info.drone, drone_info.gcs, process.argv.toString().replaceAll(',',' ')]);
 
                 run_lib.stdout.on('data', (data) => {
                     console.log('stdout: ' + data);
