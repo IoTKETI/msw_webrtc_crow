@@ -40,16 +40,21 @@ catch (e) {
 let add_lib = {};
 try {
     add_lib = JSON.parse(fs.readFileSync('./lib_webrtc_crow.json', 'utf8'));
+    if (drone_info.mission[my_msw_name].container !== add_lib.data) {
+        add_lib.data = drone_info.mission[my_msw_name].container
+    }
+    if (drone_info.mission[my_msw_name].sub_container !== add_lib.control) {
+        add_lib.control = drone_info.mission[my_msw_name].sub_container
+    }
     config.lib.push(add_lib);
 }
 catch (e) {
     add_lib = {
         name: 'lib_webrtc_crow',
-        target: 'armv6',
         description: '[name] [WebRTCpath] [Drone Name] [GCS Name]',
         scripts: './lib_webrtc_crow gcs.iotocean.org:7598 drone1 KETI_GCS',
         data: [
-            "room_name"
+            "camera:webcam"
         ],
         control: ['Control']
     };
@@ -71,14 +76,6 @@ function init() {
                         mobius_control_msw_topic.push(_topic);
                         console.log('[local_mqtt] mobius_control_msw_topic[' + i + ']: ' + _topic);
                     }
-
-                    for (let i = 0; i < config.lib[idx].data.length; i++) {
-                        let container_name = config.lib[idx].data[i];
-                        let _topic = '/MUV/data/' + config.lib[idx].name + '/' + container_name;
-                        local_mqtt_client.subscribe(_topic);
-                        lib_data_msw_topic.push(_topic);
-                        console.log('[local_mqtt] lib_data_msw_topic[' + i + ']: ' + _topic);
-                    }
                 }
 
                 let obj_lib = config.lib[idx];
@@ -96,7 +93,7 @@ function runLib(obj_lib) {
 
         let run_lib = null;
 
-        process.argv.splice(0,2);
+        process.argv.splice(0, 2);
 
         exec('getconf LONG_BIT', (error, stdout, stderr) => {
             if (error) {
@@ -108,14 +105,15 @@ function runLib(obj_lib) {
                     scripts_arr[0] = './lib_webrtc_forest';
                 }
 
-                if (process.argv.length>0) {
-                    console.log(scripts_arr[0], [drone_info.host + ':7598', drone_info.drone, drone_info.gcs, process.argv.toString().split(',').join(' ')]);
-                    run_lib = spawn(scripts_arr[0], [drone_info.host + ':7598', drone_info.drone, drone_info.gcs, process.argv.toString().split(',').join(' ')]);
+                if (process.argv) {
+                    console.log(scripts_arr[0], [drone_info.host + ':7598', drone_info.drone, drone_info.gcs, process.argv[0]]);
+                    run_lib = spawn(scripts_arr[0], [drone_info.host + ':7598', drone_info.drone, drone_info.gcs, process.argv[0]]);
                 }
                 else {
-                    console.log(scripts_arr[0], [drone_info.host + ':7598', drone_info.drone, drone_info.gcs]);
-                    run_lib = spawn(scripts_arr[0], [drone_info.host + ':7598', drone_info.drone, drone_info.gcs]);
+                    console.log(scripts_arr[0], [drone_info.host + ':7598', drone_info.drone, drone_info.gcs, 'camera:webcam']);
+                    run_lib = spawn(scripts_arr[0], [drone_info.host + ':7598', drone_info.drone, drone_info.gcs, 'camera:webcam']);
                 }
+
                 run_lib.stdout.on('data', (data) => {
                     console.log('stdout: ' + data);
                 });
@@ -190,21 +188,17 @@ function local_msw_mqtt_connect(broker_ip, port) {
 
         local_mqtt_client = mqtt.connect(connectOptions);
 
-        local_mqtt_client.on('connect', function () {
+        local_mqtt_client.on('connect', () => {
             console.log('[local_msw_mqtt_connect] connected to ' + broker_ip);
         });
 
-        local_mqtt_client.on('message', function (topic, message) {
-            if (lib_data_msw_topic.includes(topic)) {
-                setTimeout(on_receive_from_lib, parseInt(Math.random() * 5), topic, message.toString());
-
-            }
-            else if (mobius_control_msw_topic.includes(topic)) {
+        local_mqtt_client.on('message', (topic, message) => {
+            if (mobius_control_msw_topic.includes(topic)) {
                 setTimeout(on_receive_from_muv, parseInt(Math.random() * 5), topic, message.toString());
             }
         });
 
-        local_mqtt_client.on('error', function (err) {
+        local_mqtt_client.on('error', (err) => {
             console.log(err.message);
         });
     }
@@ -278,8 +272,11 @@ function parseDataMission(topic, str_message) {
 function parseControlMission(topic, str_message) {
     try {
         let topic_arr = topic.split('/');
-        let _topic = '/MUV/control/' + config.lib[0].name + '/' + topic_arr[topic_arr.length - 1];
-        local_mqtt_client.publish(_topic, str_message);
+        let cam_name = str_message.split('=')[0]
+        let _topic = '/MUV/control/' + config.lib[0].name + '/' + topic_arr[topic_arr.length - 1] + '/' + cam_name;
+        local_mqtt_client.publish(_topic, str_message.split('=')[1], () => {
+            console.log('publish ' + _topic, str_message.split('=')[1])
+        });
     }
     catch (e) {
         console.log('[parseControlMission] data format of lib is not json');
