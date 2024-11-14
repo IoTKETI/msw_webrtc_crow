@@ -101,9 +101,6 @@ function runLib(obj_lib) {
             }
             if (stdout) {
                 console.log('stdout: ' + stdout);
-                if (parseInt(stdout) === 64) {
-                    scripts_arr[0] = './lib_webrtc_forest';
-                }
 
                 if (process.argv) {
                     console.log(scripts_arr[0], [drone_info.host + ':7598', drone_info.drone, drone_info.gcs, process.argv[0]]);
