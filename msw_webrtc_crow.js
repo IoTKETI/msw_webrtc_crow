@@ -95,7 +95,6 @@ function runLib(obj_lib) {
 
         process.argv.splice(0, 2);
 
-
         let webrtc_port = scripts_arr[1].split(':')[1];
         if (process.argv) {
             console.log(scripts_arr[0], [drone_info.host + ':' + webrtc_port, drone_info.drone, drone_info.gcs, process.argv[0]]);
