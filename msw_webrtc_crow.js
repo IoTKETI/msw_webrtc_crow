@@ -95,66 +95,55 @@ function runLib(obj_lib) {
 
         process.argv.splice(0, 2);
 
-        exec('getconf LONG_BIT', (error, stdout, stderr) => {
-            if (error) {
-                console.log('error: ' + error);
+
+        if (process.argv) {
+            console.log(scripts_arr[0], [scripts_arr[1], drone_info.drone, drone_info.gcs, process.argv[0]]);
+            run_lib = spawn(scripts_arr[0], [scripts_arr[1], drone_info.drone, drone_info.gcs, process.argv[0]]);
+        }
+        else {
+            console.log(scripts_arr[0], [scripts_arr[1], drone_info.drone, drone_info.gcs, 'camera:webcam']);
+            run_lib = spawn(scripts_arr[0], [scripts_arr[1], drone_info.drone, drone_info.gcs, 'camera:webcam']);
+        }
+
+        run_lib.stdout.on('data', (data) => {
+            console.log('stdout: ' + data);
+        });
+
+        run_lib.stderr.on('data', (data) => {
+            console.log('stderr: ' + data);
+            if (data.includes("Failed to execute script 'lib_webrtc_crow' due to unhandled exception!")) {
+                runLibState = 'error';
             }
-            if (stdout) {
-                console.log('stdout: ' + stdout);
+        });
 
-                if (process.argv) {
-                    console.log(scripts_arr[0], [drone_info.host + ':7598', drone_info.drone, drone_info.gcs, process.argv[0]]);
-                    run_lib = spawn(scripts_arr[0], [drone_info.host + ':7598', drone_info.drone, drone_info.gcs, process.argv[0]]);
-                }
-                else {
-                    console.log(scripts_arr[0], [drone_info.host + ':7598', drone_info.drone, drone_info.gcs, 'camera:webcam']);
-                    run_lib = spawn(scripts_arr[0], [drone_info.host + ':7598', drone_info.drone, drone_info.gcs, 'camera:webcam']);
-                }
-
-                run_lib.stdout.on('data', (data) => {
-                    console.log('stdout: ' + data);
-                });
-
-                run_lib.stderr.on('data', (data) => {
-                    console.log('stderr: ' + data);
-                    if (data.includes("Failed to execute script 'lib_webrtc_crow' due to unhandled exception!")) {
-                        runLibState = 'error';
-                    }
-                });
-
-                run_lib.on('exit', (code) => {
-                    console.log('exit: ' + code);
-                    if (!code) {
-                        console.log('code is null');
-                        run_lib.kill();
-                    }
-                    else {
-                        // setTimeout(runLib, 3000, obj_lib);
-                        if (parseInt(code) === 1) {
-                            if (runLibState === 'error') {
-                                exec('pm2 restart ' + my_msw_name, (error, stdout, stderr) => {
-                                    if (error) {
-                                        console.log('error: ' + error);
-                                    }
-                                    if (stdout) {
-                                        console.log('stdout: ' + stdout);
-                                    }
-                                    if (stderr) {
-                                        console.log('stderr: ' + stderr);
-                                    }
-                                });
+        run_lib.on('exit', (code) => {
+            console.log('exit: ' + code);
+            if (!code) {
+                console.log('code is null');
+                run_lib.kill();
+            }
+            else {
+                // setTimeout(runLib, 3000, obj_lib);
+                if (parseInt(code) === 1) {
+                    if (runLibState === 'error') {
+                        exec('pm2 restart ' + my_msw_name, (error, stdout, stderr) => {
+                            if (error) {
+                                console.log('error: ' + error);
                             }
-                        }
+                            if (stdout) {
+                                console.log('stdout: ' + stdout);
+                            }
+                            if (stderr) {
+                                console.log('stderr: ' + stderr);
+                            }
+                        });
                     }
-                });
+                }
+            }
+        });
 
-                run_lib.on('error', (code) => {
-                    console.log('error: ' + code);
-                });
-            }
-            if (stderr) {
-                console.log('stderr: ' + stderr);
-            }
+        run_lib.on('error', (code) => {
+            console.log('error: ' + code);
         });
     }
     catch (e) {
