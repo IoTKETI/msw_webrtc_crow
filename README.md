@@ -9,9 +9,11 @@ In addition, it runs on a Raspberry Pi-based mission computer called CROW.
 ```shell
 sh ready_to_WebRTC.sh
 ```
-- `xvfb` - for virtual display
+- `pyvirtualdisplay dependencies` - for virtual display
 ```shell
-sudo apt-get install xvfb
+sudo apt-get install xvfb xserver-xephyr tigervnc-standalone-server x11-utils gnumeric
+
+python3 -m pip install pyvirtualdisplay pillow EasyProcess
 ```
 - `node package` - Node.js package
 ```shell
