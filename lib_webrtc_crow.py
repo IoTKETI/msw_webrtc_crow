@@ -176,6 +176,7 @@ def on_message(client, userdata, msg):
 
 if __name__ == '__main__':
     webRtcUrl = 'https://'
+    print('argv', argv)
     # https: // {0} / drone?id = {2} & audio = true & gcs = {1}
     host = argv[1]  # argv[1]  # {{WebRTC_URL}} : "webrtc.server.com:7598"
     drone = argv[2]  # argv[2]  # {{Drone_Name}} : "drone_name"
