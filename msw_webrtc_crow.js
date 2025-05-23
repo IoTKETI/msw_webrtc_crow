@@ -79,7 +79,7 @@ function init() {
                 }
 
                 let obj_lib = config.lib[idx];
-                setTimeout(runLib,  1000, JSON.parse(JSON.stringify(obj_lib)));
+                setTimeout(runLib,  20 * 1000, JSON.parse(JSON.stringify(obj_lib)));
             }
         }
     }
