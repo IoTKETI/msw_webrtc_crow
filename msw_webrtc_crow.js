@@ -52,7 +52,7 @@ catch (e) {
     add_lib = {
         name: 'lib_webrtc_crow',
         description: '[name] [WebRTCpath] [Drone Name] [GCS Name]',
-        scripts: './lib_webrtc_crow gcs.iotocean.org:7598 drone1 KETI_GCS',
+        scripts: './lib_webrtc_crow.py gcs.iotocean.org:7598 drone1 KETI_GCS',
         data: [
             "camera:webcam"
         ],
