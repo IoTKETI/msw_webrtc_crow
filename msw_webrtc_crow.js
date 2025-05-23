@@ -97,12 +97,12 @@ function runLib(obj_lib) {
 
         let webrtc_port = scripts_arr[1].split(':')[1];
         if (process.argv) {
-            console.log(scripts_arr[0], [drone_info.host + ':' + webrtc_port, drone_info.drone, drone_info.gcs, process.argv[0]]);
-            run_lib = spawn(scripts_arr[0], [drone_info.host + ':' + webrtc_port, drone_info.drone, drone_info.gcs, process.argv[0]]);
+            console.log('python3 '+scripts_arr[0], [drone_info.host + ':' + webrtc_port, drone_info.drone, drone_info.gcs, process.argv[0]]);
+            run_lib = spawn('python3 '+scripts_arr[0], [drone_info.host + ':' + webrtc_port, drone_info.drone, drone_info.gcs, process.argv[0]]);
         }
         else {
-            console.log(scripts_arr[0], [drone_info.host + ':' + webrtc_port, drone_info.drone, drone_info.gcs, 'camera:webcam']);
-            run_lib = spawn(scripts_arr[0], [drone_info.host + ':' + webrtc_port, drone_info.drone, drone_info.gcs, 'camera:webcam']);
+            console.log('python3 '+scripts_arr[0], [drone_info.host + ':' + webrtc_port, drone_info.drone, drone_info.gcs, 'camera:webcam']);
+            run_lib = spawn('python3 '+scripts_arr[0], [drone_info.host + ':' + webrtc_port, drone_info.drone, drone_info.gcs, 'camera:webcam']);
         }
 
         run_lib.stdout.on('data', (data) => {
