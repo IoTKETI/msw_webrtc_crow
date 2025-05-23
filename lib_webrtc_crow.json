@@ -2,7 +2,7 @@
     "name": "lib_webrtc_crow",
     "target": "armv6",
     "description": "[name] [WebRTCpath]",
-    "scripts": "./lib_webrtc_crow.py gcs.iotocean.org:7598",
+    "scripts": "lib_webrtc_crow.py gcs.iotocean.org:7598",
     "data": [
         "room_name"
     ],
