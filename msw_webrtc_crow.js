@@ -98,11 +98,11 @@ function runLib(obj_lib) {
         let webrtc_port = scripts_arr[1].split(':')[1];
         let video_source;
         if (process.argv.length > 0) {
-            console.log('python ' + scripts_arr[0], drone_info.host + ':' + webrtc_port, drone_info.drone, drone_info.gcs, process.argv[0]);
+            console.log('python3 ' + scripts_arr[0], drone_info.host + ':' + webrtc_port, drone_info.drone, drone_info.gcs, process.argv[0]);
             video_source = process.argv[0];
         }
         else {
-            console.log('python ' + scripts_arr[0], drone_info.host + ':' + webrtc_port, drone_info.drone, drone_info.gcs, 'camera=webcam');
+            console.log('python3 ' + scripts_arr[0], drone_info.host + ':' + webrtc_port, drone_info.drone, drone_info.gcs, 'camera=webcam');
             video_source = 'camera=webcam';
         }
 
