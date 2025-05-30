@@ -106,30 +106,26 @@ function runLib(obj_lib) {
             video_source = 'camera=webcam';
         }
 
-        exec('python ' + scripts_arr[0] + ' ' + drone_info.host + ':' + webrtc_port + ' ' + drone_info.drone + ' ' + drone_info.gcs + ' ' + video_source, (error, stdout, stderr)=>{
+        exec('python3 ' + scripts_arr[0] + ' ' + drone_info.host + ':' + webrtc_port + ' ' + drone_info.drone + ' ' + drone_info.gcs + ' ' + video_source, (error, stdout, stderr)=>{
             if (error) {
-                console.log('error: ' + error);
                 if (!error) {
                     console.log('code is null');
                     // run_lib.kill();
                 }
                 else {
+                    console.log('error: ' + error);
                     // setTimeout(runLib, 3000, obj_lib);
-                    if (parseInt(error) === 1) {
-                        if (runLibState === 'error') {
-                            exec('pm2 restart ' + my_msw_name, (error, stdout, stderr) => {
-                                if (error) {
-                                    console.log('error: ' + error);
-                                }
-                                if (stdout) {
-                                    console.log('stdout: ' + stdout);
-                                }
-                                if (stderr) {
-                                    console.log('stderr: ' + stderr);
-                                }
-                            });
+                    exec('pm2 restart ' + my_msw_name, (error, stdout, stderr) => {
+                        if (error) {
+                            console.log('error: ' + error);
                         }
-                    }
+                        if (stdout) {
+                            console.log('stdout: ' + stdout);
+                        }
+                        if (stderr) {
+                            console.log('stderr: ' + stderr);
+                        }
+                    });
                 }
             }
             if (stdout) {

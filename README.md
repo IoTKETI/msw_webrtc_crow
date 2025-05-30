@@ -23,8 +23,10 @@ npm install
 ### 2. Add Mission
 ```
 "mission" : {
-    "containor" : ["room_name"],
-    "subcontainor" : ["Control"],
-    "git" : "https://github.com/IoTKETI/msw_webrtc_crow.git"
+    "msw_webrtc_crow": {
+        "container" : ["camera=webcam"],
+        "sub_container" : ["Control"],
+        "git" : "https://github.com/IoTKETI/msw_webrtc_crow.git"
+    }
 }
 ```

@@ -4,7 +4,7 @@
     "description": "[name] [WebRTCpath]",
     "scripts": "lib_webrtc_crow.py gcs.iotocean.org:7598",
     "data": [
-        "room_name"
+        "camera=webcam"
     ],
     "control": [
         "Control"
