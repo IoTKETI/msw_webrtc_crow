@@ -11,7 +11,7 @@ sh ready_to_WebRTC.sh
 ```
 - `pyvirtualdisplay dependencies` - for virtual display
 ```shell
-sudo apt-get install xvfb xserver-xephyr tigervnc-standalone-server x11-utils gnumeric
+sudo apt-get install -y xvfb xserver-xephyr tigervnc-standalone-server x11-utils
 
 python3 -m pip install pyvirtualdisplay pillow EasyProcess
 ```

@@ -91,42 +91,28 @@ function runLib(obj_lib) {
     try {
         let scripts_arr = obj_lib.scripts.split(' ');
 
-        let run_lib = null;
-
         process.argv.splice(0, 2);
 
         let webrtc_port = scripts_arr[1].split(':')[1];
         let video_source;
-        if (process.argv.length > 0) {
-            console.log('python3 ' + scripts_arr[0], drone_info.host + ':' + webrtc_port, drone_info.drone, drone_info.gcs, process.argv[0]);
-            video_source = process.argv[0];
-        }
-        else {
-            console.log('python3 ' + scripts_arr[0], drone_info.host + ':' + webrtc_port, drone_info.drone, drone_info.gcs, 'camera=webcam');
-            video_source = 'camera=webcam';
-        }
+        if (process.argv.length > 0) video_source = process.argv[0];
+        else video_source = 'camera=webcam';
 
+        console.log('python3 ' + scripts_arr[0] + ' ' + drone_info.host + ':' + webrtc_port + ' ' + drone_info.drone + ' ' + drone_info.gcs + ' ' + video_source);
         exec('python3 ' + scripts_arr[0] + ' ' + drone_info.host + ':' + webrtc_port + ' ' + drone_info.drone + ' ' + drone_info.gcs + ' ' + video_source, (error, stdout, stderr)=>{
             if (error) {
-                if (!error) {
-                    console.log('code is null');
-                    // run_lib.kill();
-                }
-                else {
-                    console.log('error: ' + error);
-                    // setTimeout(runLib, 3000, obj_lib);
-                    exec('pm2 restart ' + my_msw_name, (error, stdout, stderr) => {
-                        if (error) {
-                            console.log('error: ' + error);
-                        }
-                        if (stdout) {
-                            console.log('stdout: ' + stdout);
-                        }
-                        if (stderr) {
-                            console.log('stderr: ' + stderr);
-                        }
-                    });
-                }
+                console.log('error: ' + error);
+                exec('pm2 restart ' + my_msw_name + '_' + video_source.split('=')[0], (error, stdout, stderr) => {
+                    if (error) {
+                        console.log('error: ' + error);
+                    }
+                    if (stdout) {
+                        console.log('stdout: ' + stdout);
+                    }
+                    if (stderr) {
+                        console.log('stderr: ' + stderr);
+                    }
+                });
             }
             if (stdout) {
                 console.log('stdout: ' + stdout);
