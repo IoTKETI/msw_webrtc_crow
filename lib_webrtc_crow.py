@@ -204,6 +204,7 @@ if __name__ == '__main__':
             webRtcUrl = webRtcUrl + '&audio=true'
     elif '7720' in host:
         webRtcUrl = webRtcUrl + '/publisher?droneName=' + drone + '&gcsId=' + gcs + '&cameraName=camera'
+        # TODO: rtsp 연동
     else:
         webRtcUrl = webRtcUrl + '/pub?id=' + drone + '&gcs=' + gcs
 
